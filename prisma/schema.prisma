@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Listing {
+  id             String   @id @default(cuid())
+  title          String
+  description    String   @db.Text
+  price          Float
+  city           String
+  address        String
+  type           String   // 'apartment' | 'villa' | 'commercial' | 'plot' | 'rental'
+  beds           Int
+  baths          Float
+  area           Float
+  furnished      String   // 'furnished' | 'semi-furnished' | 'unfurnished'
+  images         Json     // Array of strings
+  amenities      Json     // Array of strings
+  floorPlans     Json?    // Array of strings
+  lat            Float?
+  lng            Float?
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    Json?    // Array of strings
+  featured       Boolean  @default(false)
+  status         String   // 'published' | 'draft'
+  agentId        String
+  createdAt      DateTime @default(now())
+}
+
+model Post {
+  id                   String   @id @default(cuid())
+  title                String
+  content              String   @db.Text
+  slug                 String   @unique
+  status               String   // 'published' | 'draft' | 'scheduled'
+  categories           Json     // Array of strings
+  tags                 Json     // Array of strings
+  featuredImage        String
+  seoTitle             String?
+  seoDescription       String?
+  seoKeywords          Json?    // Array of strings
+  schemaMarkup         String?  @db.Text
+  faqs                 Json?    // Array of { question, answer }
+  authorName           String
+  authorAvatar         String
+  authorRole           String
+  tableOfContents      Json?    // Array of { id, text, depth }
+  readTime             Int
+  scheduledPublishDate DateTime?
+  views                Int      @default(0)
+  createdAt            DateTime @default(now())
+}
+
+model Inquiry {
+  id           String   @id @default(cuid())
+  listingId    String?
+  listingTitle String?
+  name         String
+  email        String
+  phone        String
+  message      String   @db.Text
+  type         String   // 'general' | 'property_inquiry' | 'callback' | 'whatsapp'
+  status       String   @default("unread") // 'unread' | 'read' | 'contacted'
+  createdAt    DateTime @default(now())
+}
+
+model Agent {
+  id            String   @id @default(cuid())
+  name          String
+  role          String
+  email         String
+  phone         String
+  whatsapp      String?
+  avatar        String
+  bio           String?  @db.Text
+  listingsCount Int      @default(0)
+}
+
+model User {
+  id         String   @id @default(cuid())
+  name       String
+  email      String   @unique
+  role       String   // 'administrator' | 'editor' | 'author'
+  password   String?
+  bio        String?  @db.Text
+  avatar     String
+  postsCount Int      @default(0)
+}
+
+model SiteSettings {
+  id             String @id @default(cuid())
+  heroTitle      String
+  heroSubtitle   String @db.Text
+  heroBgImage    String
+  featuredCities Json   // Array of { name, image, count }
+  navLinks       Json   // Array of { label, href }
+  footerLinks    Json   // Array of { label, href }
+  companyName    String
+  contactEmail   String
+  contactPhone   String
+  contactAddress String
+  facebook       String?
+  twitter        String?
+  instagram      String?
+  linkedin       String?
+}
