@@ -1,26 +1,334 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc; /* Slate 50 (Light off-white) */
+  --foreground: #0f172a; /* Slate 900 (Dark Slate text) */
+  --card-bg: #ffffff; /* Pure White */
+  --card-border: #e2e8f0; /* Slate 200 (Subtle border) */
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-card: var(--card-bg);
+  --color-border: var(--card-border);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Force re-mapping of slate colors at Tailwind level for seamless Light Mode */
+  --color-slate-950: #ffffff; /* White background */
+  --color-slate-900: #f8fafc; /* Slate 50 off-white card backgrounds */
+  --color-slate-850: #f1f5f9; /* Slate 100 border line colors */
+  --color-slate-800: #e2e8f0; /* Slate 200 border lines */
+  --color-slate-700: #cbd5e1; /* Slate 300 divider lines */
+  --color-slate-650: #94a3b8;
+  --color-slate-600: #64748b; /* Slate 500 gray text */
+  --color-slate-500: #475569; /* Slate 600 dark gray text */
+  --color-slate-400: #334155; /* Slate 700 high contrast gray text */
+  --color-slate-300: #1e293b; /* Slate 800 headings */
+  --color-slate-200: #0f172a; /* Slate 900 near-black text */
+  --color-slate-100: #020617; /* Near black */
+  --color-slate-50: #020617;
+  
+  /* Re-mapping Emerald colors to Premium Royal Blue Shades */
+  --color-emerald-500: #2563eb; /* Primary Royal Blue */
+  --color-emerald-600: #1d4ed8; /* Hover Deep Blue */
+  --color-emerald-400: #3b82f6; /* Secondary Cobalt Blue */
+  --color-emerald-300: #60a5fa;
+  --color-emerald-200: #93c5fd;
+  --color-emerald-100: #dbeafe;
+  --color-emerald-950: #eff6ff; /* Soft Blue highlight background */
+  --color-emerald-900: #dbeafe;
+  
+  /* Re-mapping Teal colors to Sky Blue gradients */
+  --color-teal-500: #3b82f6;
+  --color-teal-400: #60a5fa;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Ensure headings default to dark text, but let text-white or other classes override it naturally */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--foreground);
+}
+
+/* Force dark text for text-white on light backgrounds by default */
+.text-white {
+  color: #0f172a !important;
+}
+
+/* Maintain true white text for components with dark blue, primary gradient, or dark background elements */
+.bg-emerald-500.text-white,
+.bg-emerald-600.text-white,
+.bg-indigo-900.text-white,
+.bg-blue-600.text-white,
+.bg-blue-700.text-white,
+.from-emerald-500.text-white,
+.from-blue-600.text-white,
+.gradient-blue.text-white,
+.bg-emerald-500 .text-white,
+.bg-emerald-600 .text-white,
+.bg-indigo-900 .text-white,
+.bg-blue-600 .text-white,
+.bg-blue-700 .text-white,
+.from-emerald-500 .text-white,
+.from-blue-600 .text-white,
+.gradient-blue .text-white,
+.text-white-always {
+  color: #ffffff !important;
+}
+
+/* Adjust text-slate-300 & 400 for high readability on white backgrounds */
+.text-slate-400 {
+  color: #475569 !important;
+}
+.text-slate-300 {
+  color: #334155 !important;
+}
+
+/* Override text-slate-100 and text-slate-200 to near-black by default, but keep it white inside buttons & dark overlays */
+.text-slate-100, .text-slate-200 {
+  color: #0f172a !important;
+}
+
+.bg-emerald-500.text-slate-100,
+.bg-emerald-600.text-slate-100,
+.bg-blue-600.text-slate-100,
+.bg-blue-700.text-slate-100,
+button.text-slate-100,
+a.text-slate-100,
+.bg-emerald-500 .text-slate-100,
+.bg-emerald-600 .text-slate-100,
+.bg-blue-600 .text-slate-100,
+.bg-blue-700 .text-slate-100,
+button .text-slate-100,
+a .text-slate-100,
+.bg-emerald-500.text-slate-200,
+.bg-emerald-600.text-slate-200,
+.bg-blue-600.text-slate-200,
+.bg-blue-700.text-slate-200,
+button.text-slate-200,
+a.text-slate-200,
+.bg-emerald-500 .text-slate-200,
+.bg-emerald-600 .text-slate-200,
+.bg-blue-600 .text-slate-200,
+.bg-blue-700 .text-slate-200,
+button .text-slate-200,
+a .text-slate-200,
+.text-slate-100-always {
+  color: #ffffff !important;
+}
+
+/* Keep dark overlays dark so text is readable on top of images */
+.bg-gradient-to-t[class*="from-slate-950"] {
+  background-image: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.3) 60%, transparent 100%) !important;
+}
+.bg-gradient-to-b[class*="from-slate-950"] {
+  background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.5) 0%, rgba(15, 23, 42, 0.2) 60%, rgba(248, 250, 252, 1) 100%) !important;
+}
+
+/* Override background colors for exact elements to keep pristine contrast */
+.bg-slate-950 {
+  background-color: #f8fafc !important;
+}
+.bg-slate-900 {
+  background-color: #ffffff !important;
+}
+.border-slate-800, .border-slate-900 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Blue gradients */
+.from-emerald-500 {
+  --tw-gradient-from: #2563eb !important;
+  --tw-gradient-to: #3b82f6 !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+.to-teal-400 {
+  --tw-gradient-to: #60a5fa !important;
+}
+
+/* Hover effects */
+.hover\:from-emerald-600:hover {
+  --tw-gradient-from: #1d4ed8 !important;
+}
+.hover\:to-teal-500:hover {
+  --tw-gradient-to: #3b82f6 !important;
+}
+
+/* Glassmorphism custom classes updated for premium light theme */
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+}
+
+.glassmorphism-light {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+  border: 2px solid #f8fafc;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+/* Custom keyframes for micro-animations */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: .85;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Text glow effects */
+.text-glow-emerald, .text-glow-blue {
+  text-shadow: 0 0 12px rgba(37, 99, 235, 0.15);
+}
+
+/* Typography styles for CMS content preview in Light Mode */
+.prose-custom {
+  color: #334155; /* Slate 700 - dark text */
+  line-height: 1.8;
+  font-size: 0.95rem;
+}
+
+.prose-custom h2 {
+  color: #0f172a !important; /* Slate 900 - dark headers */
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.025em;
+  border-bottom: 1px solid #e2e8f0; /* Light border */
+  padding-bottom: 0.5rem;
+}
+
+.prose-custom h3 {
+  color: #1e293b !important; /* Slate 800 */
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-custom p {
+  margin-bottom: 1.25rem;
+}
+
+.prose-custom ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-custom li {
+  margin-bottom: 0.5rem;
+}
+
+.prose-custom blockquote {
+  border-left: 4px solid #2563eb; /* Primary Blue */
+  padding-left: 1rem;
+  font-style: italic;
+  color: #475569; /* Slate 600 */
+  margin: 1.5rem 0;
+  background-color: #f1f5f9;
+  padding: 0.75rem 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.prose-custom code {
+  background-color: #f1f5f9;
+  color: #2563eb;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.85em;
+  font-family: monospace;
+}
+
+.prose-custom pre {
+  background-color: #0f172a; /* Keep dark for syntax highlighting readability */
+  color: #f8fafc;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  border: 1px solid #1e293b;
+  margin-bottom: 1.25rem;
+}
+
+.prose-custom pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.9em;
+}
+
+/* Force all interactive input, select, and textarea fields to have highly legible dark text for Light Mode */
+input,
+select,
+textarea,
+.text-white input,
+.text-white select,
+.text-white textarea {
+  color: #000000 !important;
+}
+
+/* Ensure placeholder texts inside typeable fields are visible yet subtle */
+input::placeholder,
+textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Fix option values within select elements to be dark on white background */
+select option {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+
+/* Specific overrides for slate container children that get white text overrides */
+.bg-slate-950 input,
+.bg-slate-900 input,
+.bg-slate-950 select,
+.bg-slate-900 select,
+.bg-slate-950 textarea,
+.bg-slate-900 textarea,
+.bg-slate-950 input.text-white,
+.bg-slate-900 input.text-white,
+.bg-slate-950 select.text-white,
+.bg-slate-900 select.text-white,
+.bg-slate-950 textarea.text-white,
+.bg-slate-900 textarea.text-white {
+  color: #000000 !important;
 }

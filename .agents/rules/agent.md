@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Clario Agent Context
 
 > Finance features: **Enabled**
